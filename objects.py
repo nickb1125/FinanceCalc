@@ -142,6 +142,7 @@ class FinancialProfile:
         self.employer_matched_investments=sorted(investments["Employer Matched Retirement"].values(), key=lambda x: x.interest_rate, reverse=True)
         self.other_ira_investments=sorted(investments["IRA"].values(), key=lambda x: x.interest_rate, reverse=True)
         self.other_investments=sorted(investments["Other"].values(), key=lambda x: x.interest_rate, reverse=True)
+        self.employer_flat_rate_investments=sorted(investments["Employer Flat Rate Retirement"].values(), key=lambda x: x.interest_rate, reverse=True)
         self.monthly_needs=monthly_needs
         self.employer_benefits=employer_benefits
         self.current_month_leftover_net_income = 0
@@ -216,6 +217,11 @@ class FinancialProfile:
         self.matching_amounts_left = self.monthly_pre_net_income_investment_contributions.copy()
         self.spent_401=0
         self.spent_IRA=0
+        # Contribnute employer flat rate amounts
+        for investment_object in self.employer_flat_rate_investments:
+            contribution_amount=self.matching_amounts_left[investment_object.type]
+            investment_object.contribute_funds(contribution_amount)
+            
 
     def get_monthly_spend_on_needs(self, verbose = False):
         """Step 0: Spend money on determined needs."""
@@ -383,7 +389,8 @@ class FinancialProfile:
                                                  "Leisure" : step_0["Minimum Leisure"][0] + step_5["Excess Leisure"][0] + general_spending["Post-Deduction Leisure"][0],
                                                  "Need" : step_0.sum_horizontal()[0]})
         self.simplified_df_list.append(pl.concat([base_df, simplified_df_this_month], how = "horizontal"))
-        for account_types in [self.short_term_investments, self.debts, self.employer_matched_investments, self.other_ira_investments, self.other_investments]:
+        for account_types in [self.short_term_investments, self.debts, self.employer_matched_investments, 
+                              self.employer_flat_rate_investments, self.other_ira_investments, self.other_investments]:
             for account in account_types:
                 all_balances_dict.update({account.type : account.outstanding_balance})
         self.records_df_list.append(pl.DataFrame(all_balances_dict))
