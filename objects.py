@@ -318,17 +318,21 @@ class FinancialProfile:
             excess_401 =leftover_401_possible
         else:
             self.investments["Employer Matched Retirement"]["401K"].contribute_funds(leftover)
-            leftover = 0.0
             excess_401 =leftover
+            leftover = 0.0
+        if verbose:
+            print(f"Excess 401K Contribution: ${excess_401}")
         # Contribute excess IRA
         if leftover >= leftover_IRA_possible:
             self.investments["IRA"]["IRA"].contribute_funds(leftover_IRA_possible)
-            leftover-=leftover_IRA_possible
             excess_IRA =leftover_IRA_possible
+            leftover-=leftover_IRA_possible
         else:
             self.investments["IRA"]["IRA"].contribute_funds(leftover)
-            leftover = 0.0
             excess_IRA =leftover
+            leftover = 0.0
+        if verbose:
+            print(f"Excess IRA Contribution: ${excess_IRA}")
         # Leftover split savings and leisure
         for bank_account in self.short_term_investments:
             amount = (leftover*savings_leftover_percent)/len(self.short_term_investments)
@@ -387,7 +391,7 @@ class FinancialProfile:
                                                  "Retirement/Health" : step_2.sum_horizontal()[0] + step_4.sum_horizontal()[0] + step_5[["Excess 401K", "Excess IRA"]].sum_horizontal()[0],
                                                  "Loans" : step_3.sum_horizontal()[0],
                                                  "Leisure" : step_0["Minimum Leisure"][0] + step_5["Excess Leisure"][0] + general_spending["Post-Deduction Leisure"][0],
-                                                 "Need" : step_0.sum_horizontal()[0]})
+                                                 "Need" : step_0.drop("Minimum Leisure").sum_horizontal()[0]})
         self.simplified_df_list.append(pl.concat([base_df, simplified_df_this_month], how = "horizontal"))
         for account_types in [self.short_term_investments, self.debts, self.employer_matched_investments, 
                               self.employer_flat_rate_investments, self.other_ira_investments, self.other_investments]:
