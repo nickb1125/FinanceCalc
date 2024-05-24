@@ -3,7 +3,7 @@ import numpy as np
 
 ## Basic Settings
 
-look_ahead_years = 20
+look_ahead_years = 10
 
 ### Taxes and max investments
 
@@ -36,8 +36,8 @@ prioritize_matching_over_emergency_fund = True
 # Define debts
 
 debts = dict({
-    "Private Student Loan" : Debt(initial_outstanding_balance=25000, interest_rate=0.11, compounding="daily", type = "Private Student Loan"),
-    "Federal Student Loan" : Debt(initial_outstanding_balance=25000, interest_rate=0.04, compounding="annually", type = "Federal Student Loan")
+    "Private Student Loan" : Debt(initial_outstanding_balance=25000, interest_rate=0.09, compounding="daily", type = "Private Student Loan"),
+    "Federal Student Loan" : Debt(initial_outstanding_balance=25000, interest_rate=0.06, compounding="annually", type = "Federal Student Loan")
 })
 
 # Define insurances
@@ -45,30 +45,33 @@ debts = dict({
 insurances = dict({
     "Health" : Insurance(monthly_premium=100, type = "Health"),
     "Car" : Insurance(monthly_premium=100, type = "Car"),
-    "Renters" :  Insurance(monthly_premium=100, type = "renters")
+    "Renters" :  Insurance(monthly_premium=10, type = "renters")
 })
 
 # Define investments
 
 short_term_investments = dict({
-    "Savings" : Investment(initial_outstanding_balance=10000, interest_rate=0.01, compounding="annually", type = "Savings")
+    "Savings" : Investment(initial_outstanding_balance=15000, interest_rate=0.02, compounding="annually", type = "Savings")
 })
 
 employer_matched_investments = dict({
-    "401K" : Investment(initial_outstanding_balance=0, interest_rate=0.06, compounding="annually", type = "401K")
+    "401K" : Investment(initial_outstanding_balance=2000, interest_rate=0.07, compounding="annually", type = "401K")
+})
+
+employer_flat_rate_investments = dict({
+    "HSA" : Investment(initial_outstanding_balance=0, interest_rate=0.05, compounding="annually", type = "HSA")
 })
 
 ira_investments = dict({
-    "IRA" : Investment(initial_outstanding_balance=0, interest_rate=0.05, compounding="annually", type = "Traditional IRA")
+    "IRA" : Investment(initial_outstanding_balance=1000, interest_rate=0.05, compounding="annually", type = "Traditional IRA")
 })
 
-other_investments = dict({
-    "HSA" : Investment(initial_outstanding_balance=0, interest_rate=0.05, compounding="annually", type = "HSA")
-})
+other_investments = dict({})
 
 investments = dict({
     "Short Term" : short_term_investments,
     "Employer Matched Retirement" : employer_matched_investments,
+    'Employer Flat Rate Retirement' : employer_flat_rate_investments,
     "IRA" : ira_investments,
     "Other" : other_investments
 })
@@ -83,9 +86,9 @@ job_benefits = dict({"Biocore" : EmployerBenefits(salary=60000,
 
 # Define needs
 needs = dict({
-    "Personal Needs" : MonthlyNeededExpenses(rent=1500, food=500, electric=50, internet=35/2, 
-                                             personal_insurance=["Car", "Renters"],
-                                             minimum_excess_expendature = 700,
+    "Personal Needs" : MonthlyNeededExpenses(rent=1500, food=500, electric=30, internet=35/2, 
+                                             personal_insurance=["Car"],
+                                             minimum_excess_expendature = 500,
                                              insurances=insurances)
 })
 
